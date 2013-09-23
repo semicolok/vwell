@@ -19,6 +19,8 @@ import lombok.ToString;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+import com.injection.fire.domain.dto.HospitalJson;
+
 @Getter @Setter
 @Entity
 @ToString(of={"id", "name"})
@@ -30,20 +32,28 @@ public class Hospital implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable = false, length = 20)
+	@Column(nullable = false, length = 100)
 	private String name;
 
-	@Column(length = 15)
+	@Column(length = 30)
 	private String phone;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Location location;
 	
-
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date registTime;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedTime;
-
+	
+	public Hospital(){}
+	
+	public Hospital(HospitalJson hospitalJson) {
+		this.name = hospitalJson.getName();
+		this.phone = hospitalJson.getPhone();
+		this.location = new Location(hospitalJson);
+		this.registTime = new Date();
+		this.updatedTime = new Date();
+	}
 }

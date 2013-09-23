@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
@@ -20,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.google.common.collect.Sets;
@@ -59,6 +61,11 @@ public class User implements Serializable {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedTime;
+	
+	@Getter
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private User parent; 
 	
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
 	@OrderBy("id asc")
