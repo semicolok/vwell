@@ -1,0 +1,142 @@
+def makeDirectory = { if (!it.exists()) it.mkdirs() }
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'maven'
+apply plugin: 'war'
+
+group = 'com.direct'
+version = '0.0.1-SNAPSHOT'
+buildDir = 'target'
+
+ext {
+	javaVersion = '1.7'
+	encoding = 'UTF-8'
+	versions = [
+		spring : '3.2.4.RELEASE',
+		aspectj : '1.7.3',
+		slf4j : '1.7.5',
+		cglib : '3.0',
+		jackson : '1.9.13',
+		hibernate : '4.2.3.Final',
+		querydsl : '2.9.0.FIXED',
+		projectlombok : '0.12.0'
+	]
+}
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+[compileJava, compileTestJava]*.options*.encoding = encoding
+sourceSets.main.output.classesDir = "${buildDir}/classes"
+
+repositories { 
+	mavenRepo name: 'SiL Repository', url: 'http://scm.softwareinlife.com/nexus/content/groups/public/'
+	mavenCentral() 
+}
+
+def lib = [
+	'servlet' : [
+		"javax.servlet:servlet-api:2.5",
+		"javax.servlet.jsp:jsp-api:2.1"
+	],
+	'spring' : [
+		"org.springframework:spring-context:${versions.spring}",
+		"org.springframework:spring-context-support:${versions.spring}",
+		"org.springframework:spring-webmvc:${versions.spring}",
+		"org.springframework:spring-orm:${versions.spring}",
+		'org.springframework.data:spring-data-jpa:1.3.4.RELEASE', 
+		'org.springframework.data:spring-data-redis:1.0.6.RELEASE'
+	],
+	'aop' : [
+		"org.aspectj:aspectjrt:${versions.aspectj}",
+		"org.aspectj:aspectjweaver:${versions.aspectj}",
+		"cglib:cglib:${versions.cglib}",
+		"cglib:cglib-nodep:${versions.cglib}"
+	],
+	'hirbernate' : [
+		"org.hibernate:hibernate-entitymanager:${versions.hibernate}",
+		"org.hibernate:hibernate-envers:${versions.hibernate}",
+		'org.hibernate:hibernate-validator:5.0.1.Final'
+	],
+	'hirbernate-related' : [
+		'joda-time:joda-time:2.2',
+		'joda-time:joda-time-hibernate:1.3',
+		'com.google.guava:guava:14.0.1'
+	],
+	'querydsl' : [
+		"com.mysema.querydsl:querydsl-jpa:${versions.querydsl}"
+	],
+	'querydsl-jpaProcess' : [
+		"com.mysema.querydsl:querydsl-apt:${versions.querydsl}"
+	],
+	'etc' : [
+		"javax.inject:javax.inject:1",
+		"org.codehaus.jackson:jackson-mapper-asl:${versions.jackson}",
+		'com.fasterxml:jackson-module-hibernate:1.9.1',
+		"commons-codec:commons-codec:1.8",
+		"commons-dbcp:commons-dbcp:1.4",
+		"mysql:mysql-connector-java:5.1.26",
+		"javax.servlet:jstl:1.2",
+		"org.projectlombok:lombok:${versions.projectlombok}"
+	],
+	'test' : [
+		"org.springframework:spring-test:${versions.spring}",
+		"junit:junit:4.+",
+		"org.mockito:mockito-core:1.9.0"
+	]
+]
+
+configurations {
+	jpaProcess { extendsFrom compile }
+}
+
+dependencies {
+	testCompile lib.test
+	jpaProcess lib['querydsl-jpaProcess']
+	
+	compile lib.spring, lib.aop, lib.etc
+	compile lib.hirbernate, lib['hirbernate-related'], lib.querydsl
+	compile lib.etc
+	providedCompile lib.servlet
+}
+
+
+// 1. java source directory  : src/main/java, src/test/java
+// 2. resource directory     : src/main/resource, src/test/resource
+// 3. web source directory   : src/main/webapp, src/main/webapp/WEB-INF
+task initProject(description: 'initialize project') << {
+	sourceSets*.java.srcDirs*.each makeDirectory
+	sourceSets*.resources.srcDirs*.each makeDirectory
+	[webAppDir, new File(webAppDir, '/WEB-INF'), new File(webAppDir, '/WEB-INF/spring'), new File(webAppDir, '/WEB-INF/views')].each makeDirectory
+	(sourceSets.findAll { it.name != 'querydsl' })*.resources.srcDirs*.each makeDirectory
+}
+eclipseClasspath.dependsOn initProject
+
+eclipse {
+	classpath {
+		downloadSources = true
+		defaultOutputDir = file("${buildDir}/classes")
+	}
+}
+
+sourceSets {
+	querydsl { java { srcDir 'src/querydsl/java' } }
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build') {
+	source = sourceSets.main.java
+	classpath = configurations.jpaProcess
+	options.compilerArgs = [
+		'-nowarn',
+		'-proc:only',
+		'-encoding', encoding,
+		'-processor', 'com.mysema.query.apt.jpa.JPAAnnotationProcessor'
+		]
+	destinationDir = sourceSets.querydsl.java.srcDirs.iterator().next()
+}
+
+compileJava {
+	dependsOn generateQueryDSL
+	source generateQueryDSL.destinationDir
+}

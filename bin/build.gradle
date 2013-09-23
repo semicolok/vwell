@@ -1,0 +1,97 @@
+def makeDirectory = { if (!it.exists()) it.mkdirs() }
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'maven'
+apply plugin: 'war'
+
+group = 'com.jknyou'
+version = '0.0.1-SNAPSHOT'
+buildDir = 'target'
+
+ext {
+	javaVersion = '1.7'
+	encoding = 'UTF-8'
+	versions = [
+		spring : '3.2.4.RELEASE'
+	]
+}
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+[compileJava, compileTestJava]*.options*.encoding = encoding
+sourceSets.main.output.classesDir = "${buildDir}/classes"
+
+repositories { 
+	mavenRepo name: 'SiL Repository', url: 'http://scm.softwareinlife.com/nexus/content/groups/public/'
+	mavenCentral() 
+}
+
+def lib = [
+	'servlet' : [
+		"javax.servlet:servlet-api:2.5",
+		"javax.servlet.jsp:jsp-api:2.1"
+	],
+	'spring' : [
+		"org.springframework:spring-context:${versions.spring}",
+		"org.springframework:spring-context-support:${versions.spring}",
+		"org.springframework:spring-webmvc:${versions.spring}"
+	],
+	'etc' : [
+		"javax.inject:javax.inject:1",
+		"org.codehaus.jackson:jackson-mapper-asl:1.9.12",
+		"commons-codec:commons-codec:1.8",
+		"javax.servlet:jstl:1.2"
+		],
+	'test' : [
+		"org.springframework:spring-test:${versions.spring}",
+		"junit:junit:4.+",
+		"org.mockito:mockito-core:1.9.0"
+	]
+]
+
+dependencies {
+	compile lib.spring, lib.etc
+	providedCompile lib.servlet
+	testCompile lib.test
+}
+
+
+// 1. java source directory  : src/main/java, src/test/java
+// 2. resource directory     : src/main/resource, src/test/resource
+// 3. web source directory   : src/main/webapp, src/main/webapp/WEB-INF
+task initProject(description: 'initialize project') << {
+	sourceSets*.java.srcDirs*.each makeDirectory
+	sourceSets*.resources.srcDirs*.each makeDirectory
+	[webAppDir, new File(webAppDir, '/WEB-INF'), new File(webAppDir, '/WEB-INF/spring'), new File(webAppDir, '/WEB-INF/views')].each makeDirectory
+}
+eclipseClasspath.dependsOn initProject
+
+eclipse {
+	classpath {
+		downloadSources = true
+		defaultOutputDir = file("${buildDir}/classes")
+	}
+}
+
+compileJava.dependsOn clean
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			if (version.endsWith('-SNAPSHOT')) {
+				repository(url: 'http://scm.softwareinlife.com/nexus/content/repositories/snapshots/') {
+					authentication(userName: 'deployment', password: 'wearethe1')
+				}
+			} else {
+				repository(url: 'http://scm.softwareinlife.com/nexus/content/repositories/releases/') {
+					authentication(userName: 'deployment', password: 'wearethe1')
+				}
+			}
+			
+			pom.version = project.version
+			pom.groupId = project.group
+			pom.artifactId = project.name
+		}
+	}
+}

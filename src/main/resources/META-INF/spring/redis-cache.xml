@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd">
+
+	<bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.pass}" p:usePool="true" p:poolConfig-ref="jedisPoolConfig" /> <!-- p:timeout="100" --> 
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig" p:maxActive="10" p:maxIdle="10" p:minIdle="10" p:maxWait="-1" />
+
+	<bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate" p:connection-factory-ref="connectionFactory" />
+	<bean id="stringKeySerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+	<bean id="jsonValueSerializer" class="org.springframework.data.redis.serializer.JacksonJsonRedisSerializer" c:type="java.lang.Object" />
+	<bean id="jdkValueSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+
+<!-- 	<cache:annotation-driven /> -->
+	<bean id="annotationCacheOperationSource" class="org.springframework.cache.annotation.AnnotationCacheOperationSource" />
+	<bean id="cacheInterceptor" class="com.sil.docsflow.common.support.spring.cache.CacheInterceptor" p:cacheOperationSources-ref="annotationCacheOperationSource" p:cacheManager-ref="cacheManager" />
+	<bean id="cacheAdvisor" class="org.springframework.cache.interceptor.BeanFactoryCacheOperationSourceAdvisor" p:cacheOperationSource-ref="annotationCacheOperationSource" p:advice-ref="cacheInterceptor" />
+	
+	<bean id="cacheTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="connectionFactory" p:keySerializer-ref="stringKeySerializer" p:valueSerializer-ref="jsonValueSerializer" />
+	<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager" c:template-ref="cacheTemplate" p:defaultExpiration="30" p:expires-ref="cacheExpires" p:usePrefix="true" />
+
+	<util:map id="cacheExpires" map-class="java.util.concurrent.ConcurrentHashMap">
+		<entry key="cache:user:accessToken" value="3600000" />
+
+		<entry key="cache:menu" value="28800" />
+		<entry key="cache:menu:accessible" value="28800" />
+		<entry key="cache:tree:dept" value="28800" />
+		<entry key="cache:tree:deptDetail" value="28800" />
+
+		<entry key="cache:cabinet" value="28800" />
+		<entry key="cache:cabinet:template" value="31536000" />
+	</util:map>
+</beans>
