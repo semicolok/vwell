@@ -5,11 +5,11 @@
 
 	<aop:aspectj-autoproxy />
 
-	<bean id="loggingAspect" class="com.ocean.direct.support.LoggingAspect" />
+	<bean id="loggingAspect" class="com.injection.fire.support.LoggingAspect" />
 	
 	<aop:config>
 		<aop:aspect ref="loggingAspect">
-			<aop:pointcut id="loggingPointCut" expression="execution(* com.ocean..*.*(..))" />
+			<aop:pointcut id="loggingPointCut" expression="execution(* com.injection..*.*(..))" />
 			<aop:around method="aroundAdvice" pointcut-ref="loggingPointCut" />
 		</aop:aspect>
 	</aop:config>
