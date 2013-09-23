@@ -18,6 +18,8 @@ public class QUser extends EntityPathBase<User> {
 
     private static final long serialVersionUID = -1458441632;
 
+    private static final PathInits INITS = PathInits.DIRECT;
+
     public static final QUser user = new QUser("user");
 
     public final NumberPath<Integer> birthDay = createNumber("birthDay", Integer.class);
@@ -40,21 +42,32 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath name = createString("name");
 
+    public final QUser parent;
+
     public final DateTimePath<java.util.Date> registTime = createDateTime("registTime", java.util.Date.class);
 
     public final DateTimePath<java.util.Date> updatedTime = createDateTime("updatedTime", java.util.Date.class);
 
     public QUser(String variable) {
-        super(User.class, forVariable(variable));
+        this(User.class, forVariable(variable), INITS);
     }
 
     @SuppressWarnings("all")
     public QUser(Path<? extends User> path) {
-        super((Class)path.getType(), path.getMetadata());
+        this((Class)path.getType(), path.getMetadata(), path.getMetadata().isRoot() ? INITS : PathInits.DEFAULT);
     }
 
     public QUser(PathMetadata<?> metadata) {
-        super(User.class, metadata);
+        this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
+    }
+
+    public QUser(PathMetadata<?> metadata, PathInits inits) {
+        this(User.class, metadata, inits);
+    }
+
+    public QUser(Class<? extends User> type, PathMetadata<?> metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.parent = inits.isInitialized("parent") ? new QUser(forProperty("parent"), inits.get("parent")) : null;
     }
 
 }
