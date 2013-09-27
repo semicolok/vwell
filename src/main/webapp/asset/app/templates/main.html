@@ -1,68 +1,31 @@
-<div class="container">
-	<div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
-				<div class="well sidebar-nav">
-					<ul class="nav">
-						<li>Sidebar</li>
-						<li class="active"><a href="#">Link</a></li>
-						<li><a href="#">Link</a></li>
-						<li><a href="#">Link</a></li>
-						<li>Sidebar</li>
-						<li><a href="#">Link</a></li>
-						<li><a href="#">Link</a></li>
-						<li><a href="#">Link</a></li>
-						<li>Sidebar</li>
-						<li><a href="#">Link</a></li>
-						<li><a href="#">Link</a></li>
-					</ul>
-				</div>
-				<!--/.well -->
-			</div>
-			<!--/span-->
-
-		<div class="row row-offcanvas row-offcanvas-left">
-			<div class="col-xs-12 col-sm-9">
-				<div class="jumbotron">
-				<form role="form" style="font-size:60%;">
-					<div class="form-group">
-						<label for="userEmail">Email address</label>
-						<input type="email" class="form-control" ng-model="member.email" id="userEmail" placeholder="Enter email">
-					</div>
-					<div class="form-group">
-						<label for="userPassword">Password</label> <input
-							type="password" class="form-control" ng-model="member.pass"  id="userPassword" placeholder="Password">
-					</div>
-					<div class="form-group">
-						<label for="userName">Name</label>
-						<input type="text" class="form-control" ng-model="member.name" id="userName" placeholder="Enter name">
-					</div>
-					<div class="form-group">
-						<label for="mobileNumber">mobilePhone</label>
-						<input type="text" class="form-control" ng-model="member.mobile" id="mobileNumber" placeholder="mobileNumber">
-					</div>
-					<div class="form-group">
-						<label for="phoneNumber">Phone</label>
-						<input type="text" class="form-control" ng-model="member.phone" id="phoneNumber" placeholder="phoneNumber">
-					</div>
-					<div class="form-group">
-						<label for="latitude">위치</label>
-						<input type="text" class="form-control" ng-model="member.latitude" id="latitude" placeholder="위도">
-						<input type="text" class="form-control" ng-model="member.longitude" id="longitude" placeholder="경도">
-					</div>
-					<div class="form-group">
-						<label for="exampleInputFile">File input</label>
-						<input type="file" id="exampleInputFile">
-						<p class="help-block">Example block-level help text here.</p>
-					</div>
-					<button ng-click="create()" type="button" class="btn btn-default">Submit</button>
-				</form>
-			</div>
-				<!--/row-->
-			</div>
-			<!--/span-->
+<div class="row row-offcanvas row-offcanvas-left">
+	<div class="col-xs-12 col-sm-8">
+		<div class="jumbotron" style="font-size:100%">
+			<button data-ng-click="addForm()">add</button>
 		</div>
 		<!--/row-->
-	<hr>
-	<footer>
-	<p>&copy; do 2013</p>
-	</footer>
+	</div>
+	<!--/span-->
+</div>
+<!-- Modal -->
+<div class="modal fade" id="addVaccineformModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Add Vaccine</h4>
+			</div>
+			<div class="modal-body">
+				
+			</div>
+			
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="resetForm()">Close</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" data-ng-click="createVm(vmModel)" >Send</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
 </div>

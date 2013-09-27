@@ -1,4 +1,4 @@
-var app = angular.module('sampleApp', []);
+var app = angular.module('vwellApp', []);
 
 app.config(function($routeProvider){
 	$routeProvider

@@ -19,7 +19,7 @@
 			/>
 
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-			p:persistenceUnitName="directoc" 
+			p:persistenceUnitName="vwell" 
 			p:dataSource-ref="dataSource"
 			p:packagesToScan="com.injection.fire.domain.entity" 
 			p:jpaVendorAdapter-ref="hibernateVendor">
