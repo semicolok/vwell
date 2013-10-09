@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,6 +47,9 @@ public class Hospital implements Serializable {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedTime;
+	
+	@Transient
+	private double distance;
 	
 	public Hospital(){}
 	

@@ -27,6 +27,7 @@ ext {
 
 sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
+[configurations.runtime, configurations.default]*.exclude(module: 'commons-logging')
 [compileJava, compileTestJava]*.options*.encoding = encoding
 sourceSets.main.output.classesDir = "${buildDir}/classes"
 
@@ -98,6 +99,8 @@ dependencies {
 	compile lib.spring, lib.aop, lib.etc
 	compile lib.hirbernate, lib['hirbernate-related'], lib.querydsl
 	compile lib.etc
+	compile 'ch.qos.logback:logback-classic:1.0.6'
+	
 	providedCompile lib.servlet
 }
 
