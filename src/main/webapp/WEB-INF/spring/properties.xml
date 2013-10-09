@@ -9,9 +9,10 @@
  		
 		<!-- Database connection properties -->
  		<prop key="database.class">com.mysql.jdbc.Driver</prop>
-		<prop key="database.url">jdbc:mysql://localhost:3306/vwell_test?useUnicode=true&amp;connectionCollation=utf8_general_ci&amp;characterSetResults=utf8&amp;characterEncoding=utf8</prop>
-		<prop key="database.username">root</prop>
-		<prop key="database.password"></prop>
+		<prop key="database.url">jdbc:mysql://localhost:3306/vwell?useUnicode=true&amp;connectionCollation=utf8_general_ci&amp;characterSetResults=utf8&amp;characterEncoding=utf8</prop>
+<!-- 		<prop key="database.url">jdbc:mysql://14.63.217.9:3306/vwell?useUnicode=true&amp;connectionCollation=utf8_general_ci&amp;characterSetResults=utf8&amp;characterEncoding=utf8</prop> -->
+		<prop key="database.username">silapps</prop>
+		<prop key="database.password">tlfdoqtm!@#</prop>
 	
 		<!-- hibernateVendor properties -->
 		<prop key="hibernate.database">MYSQL</prop>
@@ -23,7 +24,7 @@
 		<prop key="hibernate.hbm2ddl.auto">update</prop>
 		<prop key="hibernate.format_sql">true</prop>
 		
-		<prop key="redis.host">14.63.212.123</prop>
+		<prop key="redis.host">14.63.217.9</prop>
 		<prop key="redis.port">16379</prop>
 		<prop key="redis.pass"></prop>
 	</util:properties>
