@@ -8,7 +8,7 @@
 	<import resource="test-properties.xml" />
 	<context:property-placeholder properties-ref="defaultProperties"  />
 	<import resource="test-data.xml" />
-	<import resource="test-redis-cache.xml" />
+<!-- 	<import resource="test-redis-cache.xml" /> -->
 	
 	<context:component-scan base-package="com.injection.fire">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />

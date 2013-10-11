@@ -12,6 +12,6 @@ public interface HealthCenterRepository extends JpaRepository<HealthCenter, Long
 
 	List<HealthCenter> findByNameLike(String name);
 
-	@Query(value = "SELECT * FROM `HealthCenter` as hp INNER JOIN (SELECT id, (3959 * acos(cos(radians(?1)) * cos(radians(lo.lat)) * cos(radians(lo.lng) - radians(?2)) + sin(radians(?1)) * sin(radians(lo.lat)))) AS distance FROM `Location` AS lo HAVING distance < 10 ORDER BY distance asc LIMIT 0 , 10) as locate ON hp.location_id = locate.id", nativeQuery = true)
+	@Query(value = "SELECT * FROM `HealthCenter` as hp INNER JOIN (SELECT id, (3959 * acos(cos(radians(?1)) * cos(radians(lo.lat)) * cos(radians(lo.lng) - radians(?2)) + sin(radians(?1)) * sin(radians(lo.lat)))) AS distance FROM `Location` AS lo HAVING distance < 5 ORDER BY distance asc) as locate ON hp.location_id = locate.id", nativeQuery = true)
 	List<HealthCenter> searchAround(Double lat, Double lng);
 }
