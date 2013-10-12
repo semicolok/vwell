@@ -30,6 +30,8 @@ public class QVaccine extends EntityPathBase<Vaccine> {
 
     public final NumberPath<Integer> endPeriod = createNumber("endPeriod", Integer.class);
 
+    public final StringPath gender = createString("gender");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath name = createString("name");
