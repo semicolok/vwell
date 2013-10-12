@@ -32,8 +32,8 @@ public class AddJsonDataTest {
 	@Test
 	public void test() {
 		
-//		addHealthCenterData();
-		addHospitalData();
+		addHealthCenterData();
+//		addHospitalData();
 	}
 
 	private void addHospitalData() {
@@ -54,10 +54,12 @@ public class AddJsonDataTest {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 //			List<HealthCenterJson> healthCenterJsons = getJsonData("/healthCenter-unicode.json", HealthCenterJson.class);
-			List<HealthCenterJson> healthCenterJsons = mapper.readValue(new File(dataFolderPath+ "/healthCenter-unicode.json"), new TypeReference<List<HealthCenterJson>>() {});
+//			List<HealthCenterJson> healthCenterJsons = mapper.readValue(new File(dataFolderPath+ "/healthCenters.json"), new TypeReference<List<HealthCenterJson>>() {});
+			List<HealthCenterJson> healthCenterJsons = mapper.readValue(new File(dataFolderPath+ "/healthCenterList.json"), new TypeReference<List<HealthCenterJson>>() {});
 			List<HealthCenter> healthCenters = new ArrayList<HealthCenter>(healthCenterJsons.size());
 			for (HealthCenterJson healthCenterJson : healthCenterJsons) {
 				healthCenters.add(new HealthCenter(healthCenterJson));
+				System.out.println(healthCenterJson.getName());
 			}
 			healthCenterRepository.save(healthCenters);
 		} catch (Exception e) {

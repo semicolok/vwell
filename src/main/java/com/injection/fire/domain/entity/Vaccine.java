@@ -64,7 +64,7 @@ public class Vaccine implements Serializable {
 	private Date updatedTime;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "vaccine", targetEntity = Vaccine.class, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "vaccine", targetEntity = Disease.class, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<Disease> diseases = Lists.newArrayList();
 	
 	public Vaccine(){}
